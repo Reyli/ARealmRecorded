@@ -1,16 +1,22 @@
 ﻿using System;
 using Dalamud.Logging;
 using Dalamud.Plugin;
+using Dalamud.Game.Command;
+
 
 namespace ARealmRecorded;
 
 public class ARealmRecorded : IDalamudPlugin
 {
     public string Name => "A Realm Recorded";
+
+    private const string commandName = "/showplayback";
     public static ARealmRecorded Plugin { get; private set; }
     public static Configuration Config { get; private set; }
 
-    public ARealmRecorded(DalamudPluginInterface pluginInterface)
+    private CommandManager CommandManager { get; init; }
+
+    public ARealmRecorded(DalamudPluginInterface pluginInterface, CommandManager commandManager)
     {
         Plugin = this;
         DalamudApi.Initialize(this, pluginInterface);
@@ -25,6 +31,10 @@ public class ARealmRecorded : IDalamudPlugin
             //DalamudApi.Framework.Update += Update;
             DalamudApi.PluginInterface.UiBuilder.Draw += Draw;
             //DalamudApi.PluginInterface.UiBuilder.OpenConfigUi += ToggleConfig;
+            this.CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "A useful message to display in /xlhelp"
+            });
         }
         catch (Exception e)
         {
@@ -33,6 +43,12 @@ public class ARealmRecorded : IDalamudPlugin
     }
 
     //public void ToggleConfig() => PluginUI.isVisible ^= true;
+
+    private void OnCommand(string command, string args)
+    {
+        // in response to the slash command, just display our main ui
+        PluginUI.Draw();
+    }
 
     public static void PrintEcho(string message) => DalamudApi.ChatGui.Print($"[A Realm Recorded] {message}");
     public static void PrintError(string message) => DalamudApi.ChatGui.PrintError($"[A Realm Recorded] {message}");

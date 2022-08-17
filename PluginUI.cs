@@ -116,23 +116,9 @@ public static class PluginUI
 
     public static unsafe void DrawExpandedPlaybackControls()
     {
-        if (DalamudApi.GameGui.GameUiHidden || Game.ffxivReplay->selectedChapter != 64) return;
+        if (DalamudApi.GameGui.GameUiHidden) return;
 
-        if (!Game.InPlayback)
-        {
-            loadingPlayback = false;
-            loadedPlayback = false;
-            return;
-        }
-
-        if (!loadedPlayback)
-        {
-            if (Game.ffxivReplay->u0x6F0 != 0)
-                loadingPlayback = true;
-            else if (loadingPlayback && Game.ffxivReplay->u0x6F0 == 0)
-                loadedPlayback = true;
-            return;
-        }
+       
 
         var addon = (AtkUnitBase*)DalamudApi.GameGui.GetAddonByName("ContentsReplayPlayer", 1);
         if (addon == null || !addon->IsVisible) return;
@@ -158,6 +144,7 @@ public static class PluginUI
         if (ImGui.SliderFloat("Speed", ref speed, 0.1f, 10, "%.1f", ImGuiSliderFlags.NoInput))
             Game.ffxivReplay->speed = speed;
 
+        //var buttonSize = new Vector2(ImGui.CalcTextSize("aaaaa").X, 0);
         for (int i = 0; i < presetSpeeds.Length; i++)
         {
             if (i != 0)
