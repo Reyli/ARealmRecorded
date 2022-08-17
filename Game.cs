@@ -67,7 +67,6 @@ public unsafe class Game
         if (contentFinderCondition == null) return;
 
         var contentType = contentFinderCondition.ContentType.Row;
-        if (!whitelistedContentTypes.Contains(contentType)) return;
 
         FixNextReplaySaveSlot();
         InitializeRecordingHook.Original(ffxivReplay);
